@@ -1,0 +1,2463 @@
+
+
+= Clickup Module Connector Reference
+
+
+
+== Configurations
+---
+[[Config]]
+=== Config
+
+
+==== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+|Name | String | The name for this configuration. Connectors reference the configuration with this name. | | *x*{nbsp}
+| Connection a| <<Config_OauthConnection, Oauth Connection Provider>>
+ | The connection types that can be provided to this configuration. | | *x*{nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  1 | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  MINUTES | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  AUTO | {nbsp}
+| Name a| String |  The identifier of this element used to reference it in other components |  | *x*{nbsp}
+| Expiration Policy a| <<ExpirationPolicy>> |  Configures the minimum amount of time that a dynamic configuration instance can remain idle before the runtime considers it eligible for expiration. This does not mean that the platform will expire the instance at the exact moment that it becomes eligible. The runtime will actually purge the instances when it sees it fit. |  | {nbsp}
+|===
+
+==== Connection Types
+[[Config_OauthConnection]]
+===== Oauth Connection Provider
+
+
+====== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Default Headers a| Array of <<DefaultHeader>> |  |  | {nbsp}
+| Query Parameters a| Array of <<DefaultQueryParam>> |  |  | {nbsp}
+| Connection Timeout a| Number |  The timeout for establishing connections to the remote service |  30 | {nbsp}
+| Connection Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Connection Timeout |  SECONDS | {nbsp}
+| Use Persistent Connections a| Boolean |  If false, each connection will be closed after the first request is completed. |  true | {nbsp}
+| Max Connections a| Number |  The maximum number of outbound connections that will be kept open at the same time |  -1 | {nbsp}
+| Connection Idle Timeout a| Number |  A timeout for how long a connection can remain idle before it is closed |  30 | {nbsp}
+| Connection Idle Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the connection Idle Timeout |  SECONDS | {nbsp}
+| Proxy Config a| <<Proxy>> |  Reusable configuration element for outbound connections through a proxy |  | {nbsp}
+| Stream Response a| Boolean |  Whether or not received responses should be streamed |  false | {nbsp}
+| Response Buffer Size a| Number |  The space in bytes for the buffer where the HTTP response will be stored. |  -1 | {nbsp}
+| Base Uri a| String |  Base URL of Clickup |  https://api.clickup.com/api/v2 | {nbsp}
+| Access Token a| String |  Used to send a valid OAuth 2 access token. |  | *x*{nbsp}
+| Protocol a| Enumeration, one of:
+
+** HTTP
+** HTTPS |  Protocol to use for communication. Valid values are HTTP and HTTPS |  HTTP | {nbsp}
+| TLS Configuration a| <<Tls>> |  |  | {nbsp}
+| Reconnection a| <<Reconnection>> |  When the application is deployed, a connectivity test is performed on all connectors. If set to true, deployment will fail if the test doesn't pass after exhausting the associated reconnection strategy |  | {nbsp}
+|===
+
+==== Associated Operations
+* <<AddTaskToList>> {nbsp}
+* <<CreateChatViewComment>> {nbsp}
+* <<CreateFolderlessList>> {nbsp}
+* <<CreateList>> {nbsp}
+* <<CreateListComment>> {nbsp}
+* <<CreateTask>> {nbsp}
+* <<CreateTaskAttachment>> {nbsp}
+* <<CreateTaskComment>> {nbsp}
+* <<DeleteComment>> {nbsp}
+* <<DeleteList>> {nbsp}
+* <<DeleteTask>> {nbsp}
+* <<GetAccessibleCustomFields>> {nbsp}
+* <<GetBulkTasksStatusTime>> {nbsp}
+* <<GetChatViewComments>> {nbsp}
+* <<GetFilteredTeamTasks>> {nbsp}
+* <<GetFolderlessLists>> {nbsp}
+* <<GetList>> {nbsp}
+* <<GetListComments>> {nbsp}
+* <<GetLists>> {nbsp}
+* <<GetTask>> {nbsp}
+* <<GetTaskComments>> {nbsp}
+* <<GetTasks>> {nbsp}
+* <<GetTasksStatusTime>> {nbsp}
+* <<RemoveCustomFieldValue>> {nbsp}
+* <<RemoveTaskFromList>> {nbsp}
+* <<SetCustomFieldValue>> {nbsp}
+* <<UpdateComment>> {nbsp}
+* <<UpdateList>> {nbsp}
+* <<UpdateTask>> {nbsp}
+
+
+
+== Operations
+
+[[AddTaskToList]]
+== Add Task To List
+`<clickup:add-task-to-list>`
+
+
+Add a task to an additional List This operation makes an HTTP POST request to the /list/{list_id}/task/{task_id} endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| List ID a| String |  Enter Unique List ID of the list |  | *x*{nbsp}
+| Task ID a| String |  Enter the Unique task ID of the task you want to update |  | *x*{nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[CreateChatViewComment]]
+== Create Chat View Comment
+`<clickup:create-chat-view-comment>`
+
+
+Add a new comment to a Chat view This operation makes an HTTP POST request to the /view/{view_id}/comment endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| View ID a| String |  Enter Unique View ID of the chat window |  | *x*{nbsp}
+| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[CreateFolderlessList]]
+== Create Folderless List
+`<clickup:create-folderless-list>`
+
+
+Add a new List in a Space This operation makes an HTTP POST request to the /space/{space_id}/list endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Space ID a| String |  Enter Unique Space ID of the space |  | *x*{nbsp}
+| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[CreateList]]
+== Create List
+`<clickup:create-list>`
+
+
+Add a new List to a Folder This operation makes an HTTP POST request to the /folder/{folder_id}/list endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Folder ID a| String |  Enter Unique Folder ID of the folder |  | *x*{nbsp}
+| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[CreateListComment]]
+== Create List Comment
+`<clickup:create-list-comment>`
+
+
+Add a comment to a List This operation makes an HTTP POST request to the /list/{list_id}/comment endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| List ID a| String |  Enter Unique List ID of the list |  | *x*{nbsp}
+| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[CreateTask]]
+== Create Task
+`<clickup:create-task>`
+
+
+Create a new task This operation makes an HTTP POST request to the /list/{list_id}/task endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| List ID a| String |  Enter Unique List ID of the list |  | *x*{nbsp}
+| Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
+| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[CreateTaskAttachment]]
+== Create Task Attachment
+`<clickup:create-task-attachment>`
+
+
+Upload a file to a task as an attachment This operation makes an HTTP POST request to the /task/{task_id}/attachment endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Task ID a| String |  Enter Unique Task ID of the task |  | *x*{nbsp}
+| Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
+| Team ID a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Attachment Content a| String |  The content of the 'attachment' part. |  #[payload] | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[CreateTaskComment]]
+== Create Task Comment
+`<clickup:create-task-comment>`
+
+
+Add a new comment to a task This operation makes an HTTP POST request to the /task/{task_id}/comment endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Task ID a| String |  Enter Unique Task ID of the task |  | *x*{nbsp}
+| Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
+| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[DeleteComment]]
+== Delete Comment
+`<clickup:delete-comment>`
+
+
+Delete a task comment This operation makes an HTTP DELETE request to the /comment/{comment_id} endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Comment ID a| String |  Enter Unique Comment ID of the comment |  | *x*{nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[DeleteList]]
+== Delete List
+`<clickup:delete-list>`
+
+
+Delete a List from your Workspace This operation makes an HTTP DELETE request to the /list/{list_id} endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| List ID a| String |  Enter Unique List ID of the list |  | *x*{nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[DeleteTask]]
+== Delete Task
+`<clickup:delete-task>`
+
+
+Delete a task from your Workspace This operation makes an HTTP DELETE request to the /task/{task_id} endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Task ID a| String |  Enter the Unique task ID of the task you want to update |  | *x*{nbsp}
+| Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
+| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[GetAccessibleCustomFields]]
+== Get Accessible Custom Fields
+`<clickup:get-accessible-custom-fields>`
+
+
+View the Custom Fields available on tasks in a specific List This operation makes an HTTP GET request to the /list/{list_id}/field endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| List ID a| String |  Enter Unique List ID of the list |  | *x*{nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[GetBulkTasksStatusTime]]
+== Get Bulk Tasks' Time in Status
+`<clickup:get-bulk-tasks-status-time>`
+
+
+View how long two or more tasks have been in each status This operation makes an HTTP GET request to the /task/bulk_time_in_status/task_ids endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
+| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Task ids a| String |  Include this paramater once per task_id. You can include up to 100 task ids per request |  | *x*{nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[GetChatViewComments]]
+== Get Chat View Comments
+`<clickup:get-chat-view-comments>`
+
+
+View comments from a Chat view This operation makes an HTTP GET request to the /view/{view_id}/comment endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| View ID a| String |  Enter Unique View ID of the chat window |  | *x*{nbsp}
+| start a| String |  Enter the date of a task comment using Unix time in milliseconds |  | {nbsp}
+| Start id a| String |  Enter the Comment id of a task comment |  | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[GetFilteredTeamTasks]]
+== Get Filtered Team Tasks
+`<clickup:get-filtered-team-tasks>`
+
+
+View the tasks that meet specific criteria from a Workspace This operation makes an HTTP GET request to the /team/{team_id}/task endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Team ID (Workspace) a| String |  Enter the Unique Team/Workspace ID for workspace |  | *x*{nbsp}
+| page a| Number |  Page to fetch (starts at 0) |  | {nbsp}
+| Order by a| String |  Order by a particular field. By default, tasks are ordered by created |  | {nbsp}
+| reverse a| Boolean |  Tasks are displayed in reverse order. |  false | {nbsp}
+| subtasks a| Boolean |  Include or exclude subtasks. By default, subtasks are excluded |  false | {nbsp}
+| statuses a| String |  Filter by statuses. To included closed tasks, use the include_closed parameter |  | {nbsp}
+| Include closed a| Boolean |  Include or excluse closed tasks. By default, they are excluded |  false | {nbsp}
+| assignees a| String |  Filter by Assignees |  | {nbsp}
+| tags a| String |  Filter by tags |  | {nbsp}
+| Due date gt a| Number |  Filter by due date greater than Unix time in milliseconds |  | {nbsp}
+| Due date lt a| Number |  Filter by due date less than Unix time in milliseconds |  | {nbsp}
+| Date created gt a| Number |  Filter by date created greater than Unix time in milliseconds |  | {nbsp}
+| Date created lt a| Number |  Filter by date created less than Unix time in milliseconds |  | {nbsp}
+| Date updated gt a| Number |  Filter by date updated greater than Unix time in milliseconds |  | {nbsp}
+| Date updated lt a| Number |  Filter by date updated less than Unix time in milliseconds |  | {nbsp}
+| Custom fields a| String |  Include tasks with specific values in one or more Custom Fields |  | {nbsp}
+| Space ids a| String |  Filter by Spaces |  | {nbsp}
+| Project ids a| String |  Filter by Folders |  | {nbsp}
+| List ids a| String |  Filter by Lists |  | {nbsp}
+| Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
+| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[GetFolderlessLists]]
+== Get Folderless Lists
+`<clickup:get-folderless-lists>`
+
+
+View the Lists in a Space that aren't located in a Folder This operation makes an HTTP GET request to the /space/{space_id}/list endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Space ID a| String |  Enter Unique Space ID of the space |  | *x*{nbsp}
+| archived a| Boolean |  Set to true if required to get archived list details |  false | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[GetList]]
+== Get List
+`<clickup:get-list>`
+
+
+View information about a List This operation makes an HTTP GET request to the /list/{list_id} endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| List ID a| String |  Enter Unique List ID of the list |  | *x*{nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[GetListComments]]
+== Get List Comments
+`<clickup:get-list-comments>`
+
+
+View the comments added to a List This operation makes an HTTP GET request to the /list/{list_id}/comment endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| List ID a| String |  Enter Unique List ID of the list |  | *x*{nbsp}
+| start a| String |  Enter the date of a task comment using Unix time in milliseconds |  | {nbsp}
+| Start id a| String |  Enter the Comment id of a task comment |  | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[GetLists]]
+== Get Lists
+`<clickup:get-lists>`
+
+
+View the Lists within a Folder This operation makes an HTTP GET request to the /folder/{folder_id}/list endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Folder ID a| String |  Enter Unique Folder ID of the folder |  | *x*{nbsp}
+| archived a| Boolean |  Set to true if required to get archived list details |  false | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[GetTask]]
+== Get Task
+`<clickup:get-task>`
+
+
+View information about a task This operation makes an HTTP GET request to the /task/{task_id} endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Task ID a| String |  Enter the Unique task ID of the task you want to update |  | *x*{nbsp}
+| Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
+| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Include subtasks a| Boolean |  Include subtasks, default false |  false | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[GetTaskComments]]
+== Get Task Comments
+`<clickup:get-task-comments>`
+
+
+View task comments This operation makes an HTTP GET request to the /task/{task_id}/comment endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Task ID a| String |  Enter Unique Task ID of the task |  | *x*{nbsp}
+| Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
+| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| start a| String |  Enter the date of a task comment using Unix time in milliseconds |  | {nbsp}
+| Start id a| String |  Enter the Comment id of a task comment |  | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[GetTasks]]
+== Get Tasks
+`<clickup:get-tasks>`
+
+
+View the tasks in a List This operation makes an HTTP GET request to the /list/{list_id}/task endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| List ID a| String |  Enter Unique List ID of the list |  | *x*{nbsp}
+| archived a| Boolean |  Set to true if required to get archived task details |  false | {nbsp}
+| page a| Number |  Page to fetch (starts at 0) |  | {nbsp}
+| Order by a| String |  Order by a particular field. By default, tasks are ordered by created |  | {nbsp}
+| reverse a| Boolean |  Tasks are displayed in reverse order. |  false | {nbsp}
+| subtasks a| Boolean |  Include or exclude subtasks. By default, subtasks are excluded |  false | {nbsp}
+| statuses a| String |  Filter by statuses. To included closed tasks, use the include_closed parameter |  | {nbsp}
+| Include closed a| Boolean |  Include or excluse closed tasks. By default, they are excluded |  false | {nbsp}
+| assignees a| String |  Filter by Assignees |  | {nbsp}
+| tags a| String |  Filter by tags |  | {nbsp}
+| Due date gt a| Number |  Filter by due date greater than Unix time in milliseconds |  | {nbsp}
+| Due date lt a| Number |  Filter by due date less than Unix time in milliseconds |  | {nbsp}
+| Date created gt a| Number |  Filter by date created greater than Unix time in milliseconds |  | {nbsp}
+| Date created lt a| Number |  Filter by date created less than Unix time in milliseconds |  | {nbsp}
+| Date updated gt a| Number |  Filter by date updated greater than Unix time in milliseconds |  | {nbsp}
+| Date updated lt a| Number |  Filter by date updated less than Unix time in milliseconds |  | {nbsp}
+| Custom fields a| String |  Include tasks with specific values in one or more Custom Fields |  | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[GetTasksStatusTime]]
+== Get Task's Time in Status
+`<clickup:get-tasks-status-time>`
+
+
+View how long a task has been in each status This operation makes an HTTP GET request to the /task/{task_id}/time_in_status endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Task ID a| String |  Enter the Unique task ID of the task you want to update |  | *x*{nbsp}
+| Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
+| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[RemoveCustomFieldValue]]
+== Remove Custom Field Value
+`<clickup:remove-custom-field-value>`
+
+
+Remove the data from a Custom Field on a task. This does not delete the option from the Custom Field This operation makes an HTTP DELETE request to the /task/{task_id}/field/{field_id} endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Task ID a| String |  Enter the Unique task ID of the task you want to update |  | *x*{nbsp}
+| Field ID a| String |  Enter the universal unique identifier (UUID) of the Custom Field you want to set |  | *x*{nbsp}
+| Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
+| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[RemoveTaskFromList]]
+== Remove Task From List
+`<clickup:remove-task-from-list>`
+
+
+Remove a task from an additional List. You can't remove a task from its home List This operation makes an HTTP DELETE request to the /list/{list_id}/task/{task_id} endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| List ID a| String |  Enter Unique List ID of the list |  | *x*{nbsp}
+| Task ID a| String |  Enter the Unique task ID of the task you want to update |  | *x*{nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[SetCustomFieldValue]]
+== Set Custom Field Value
+`<clickup:set-custom-field-value>`
+
+
+Add data to a Custom field on a task This operation makes an HTTP POST request to the /task/{task_id}/field/{field_id} endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Task ID a| String |  Enter the Unique task ID of the task you want to update |  | *x*{nbsp}
+| Field ID a| String |  Enter the universal unique identifier (UUID) of the Custom Field you want to set |  | *x*{nbsp}
+| Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
+| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[UpdateComment]]
+== Update Comment
+`<clickup:update-comment>`
+
+
+Replace the content of a task commment, assign a comment, and mark a comment as resolved This operation makes an HTTP PUT request to the /comment/{comment_id} endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Comment ID a| String |  Enter Unique Comment ID of the comment |  | *x*{nbsp}
+| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[UpdateList]]
+== Update List
+`<clickup:update-list>`
+
+
+Rename a List, update the List Info description, set a due date/time, set the List's priority, set an assignee, set or remove the List color This operation makes an HTTP PUT request to the /list/{list_id} endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| List ID a| String |  Enter Unique List ID of the list |  | *x*{nbsp}
+| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[UpdateTask]]
+== Update Task
+`<clickup:update-task>`
+
+
+Update a task This operation makes an HTTP PUT request to the /task/{task_id} endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Task ID a| String |  Enter the Unique task ID of the task you want to update |  | *x*{nbsp}
+| Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
+| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| Enumeration, one of:
+
+** AUTO
+** ALWAYS
+** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+
+== Types
+[[DefaultHeader]]
+=== Default Header
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| Key a| String |  |  | x
+| Value a| String |  |  | x
+|======================
+
+[[DefaultQueryParam]]
+=== Default Query Param
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| Key a| String |  |  | x
+| Value a| String |  |  | x
+|======================
+
+[[Proxy]]
+=== Proxy
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| Host a| String |  |  | x
+| Port a| Number |  |  | x
+| Username a| String |  |  | 
+| Password a| String |  |  | 
+| Non Proxy Hosts a| String |  |  | 
+|======================
+
+[[Tls]]
+=== Tls
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| Enabled Protocols a| String | A comma separated list of protocols enabled for this context. |  | 
+| Enabled Cipher Suites a| String | A comma separated list of cipher suites enabled for this context. |  | 
+| Trust Store a| <<TrustStore>> |  |  | 
+| Key Store a| <<KeyStore>> |  |  | 
+| Revocation Check a| * <<StandardRevocationCheck>>
+* <<CustomOcspResponder>>
+* <<CrlFile>> |  |  | 
+|======================
+
+[[TrustStore]]
+=== Trust Store
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| Path a| String | The location (which will be resolved relative to the current classpath and file system, if possible) of the trust store. |  | 
+| Password a| String | The password used to protect the trust store. |  | 
+| Type a| String | The type of store used. |  | 
+| Algorithm a| String | The algorithm used by the trust store. |  | 
+| Insecure a| Boolean | If true, no certificate validations will be performed, rendering connections vulnerable to attacks. Use at your own risk. |  | 
+|======================
+
+[[KeyStore]]
+=== Key Store
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| Path a| String | The location (which will be resolved relative to the current classpath and file system, if possible) of the key store. |  | 
+| Type a| String | The type of store used. |  | 
+| Alias a| String | When the key store contains many private keys, this attribute indicates the alias of the key that should be used. If not defined, the first key in the file will be used by default. |  | 
+| Key Password a| String | The password used to protect the private key. |  | 
+| Password a| String | The password used to protect the key store. |  | 
+| Algorithm a| String | The algorithm used by the key store. |  | 
+|======================
+
+[[StandardRevocationCheck]]
+=== Standard Revocation Check
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| Only End Entities a| Boolean | Only verify the last element of the certificate chain. |  | 
+| Prefer Crls a| Boolean | Try CRL instead of OCSP first. |  | 
+| No Fallback a| Boolean | Do not use the secondary checking method (the one not selected before). |  | 
+| Soft Fail a| Boolean | Avoid verification failure when the revocation server can not be reached or is busy. |  | 
+|======================
+
+[[CustomOcspResponder]]
+=== Custom Ocsp Responder
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| Url a| String | The URL of the OCSP responder. |  | 
+| Cert Alias a| String | Alias of the signing certificate for the OCSP response (must be in the trust store), if present. |  | 
+|======================
+
+[[CrlFile]]
+=== Crl File
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| Path a| String | The path to the CRL file. |  | 
+|======================
+
+[[Reconnection]]
+=== Reconnection
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| Fails Deployment a| Boolean | When the application is deployed, a connectivity test is performed on all connectors. If set to true, deployment will fail if the test doesn't pass after exhausting the associated reconnection strategy |  | 
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> | The reconnection strategy to use |  | 
+|======================
+
+[[Reconnect]]
+=== Reconnect
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| Frequency a| Number | How often (in ms) to reconnect |  | 
+| Blocking a| Boolean | If false, the reconnection strategy will run in a separate, non-blocking thread |  | 
+| Count a| Number | How many reconnection attempts to make |  | 
+|======================
+
+[[ReconnectForever]]
+=== Reconnect Forever
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| Frequency a| Number | How often (in ms) to reconnect |  | 
+| Blocking a| Boolean | If false, the reconnection strategy will run in a separate, non-blocking thread |  | 
+|======================
+
+[[ExpirationPolicy]]
+=== Expiration Policy
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| Max Idle Time a| Number | A scalar time value for the maximum amount of time a dynamic configuration instance should be allowed to be idle before it's considered eligible for expiration |  | 
+| Time Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS | A time unit that qualifies the maxIdleTime attribute |  | 
+|======================
+
+[[HttpResponseAttributes]]
+=== Http Response Attributes
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| Status Code a| Number |  |  | x
+| Headers a| Object |  |  | x
+| Reason Phrase a| String |  |  | x
+|======================
+
+[[RepeatableInMemoryStream]]
+=== Repeatable In Memory Stream
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| Initial Buffer Size a| Number | This is the amount of memory that will be allocated in order to consume the stream and provide random access to it. If the stream contains more data than can be fit into this buffer, then it will be expanded by according to the bufferSizeIncrement attribute, with an upper limit of maxInMemorySize. |  | 
+| Buffer Size Increment a| Number | This is by how much will be buffer size by expanded if it exceeds its initial size. Setting a value of zero or lower will mean that the buffer should not expand, meaning that a STREAM_MAXIMUM_SIZE_EXCEEDED error will be raised when the buffer gets full. |  | 
+| Max Buffer Size a| Number | This is the maximum amount of memory that will be used. If more than that is used then a STREAM_MAXIMUM_SIZE_EXCEEDED error will be raised. A value lower or equal to zero means no limit. |  | 
+| Buffer Unit a| Enumeration, one of:
+
+** BYTE
+** KB
+** MB
+** GB | The unit in which all these attributes are expressed |  | 
+|======================
+
+[[RepeatableFileStoreStream]]
+=== Repeatable File Store Stream
+
+[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
+|======================
+| Field | Type | Description | Default Value | Required
+| In Memory Size a| Number | Defines the maximum memory that the stream should use to keep data in memory. If more than that is consumed then it will start to buffer the content on disk. |  | 
+| Buffer Unit a| Enumeration, one of:
+
+** BYTE
+** KB
+** MB
+** GB | The unit in which maxInMemorySize is expressed |  | 
+|======================
+
