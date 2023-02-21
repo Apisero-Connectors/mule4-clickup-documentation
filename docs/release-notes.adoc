@@ -1,0 +1,41 @@
+= ClickUp Connector Release Notes
+
+December 2022
+
+The ClickUp connector allows for connectivity to ClickUp Platform and can be used in both on-premises and CloudHub environments.
+
+== Version 1.0.1 - 2023-01
+This release of ClickUp Connector have includes user and teams module
+
+== Version 1.0.1 - Compatibility
+The ClickUp Connector is compatible with these software versions:
+
+[%header%autowidth.spread]
+|===
+|Software |Version
+|Anypoint Studio |7.4.x
+|Mule |4.2.x and later
+|JDK |1.8.x and later
+|===
+
+== Release 1.0.1 provides below features/fixes:
+|===
+|1] 'Users' module added.
+|2] 'Teams - Workspaces' module added.
+|===
+
+== Version 1.0.0 - 2022-12
+This release of ClickUp Connector is compatible with Mule 4, and it is not compatible with Mule 3 versions.
+
+== Version 1.0.0 - Compatibility
+The ClickUp Connector is compatible with these software versions:
+
+[%header%autowidth.spread]
+|===
+|Software |Version
+|Anypoint Studio |7.4.x
+|Mule |4.2.x and later
+|JDK |1.8.x and later
+|===
+
+
