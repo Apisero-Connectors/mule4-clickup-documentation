@@ -23,7 +23,7 @@ To use ClickUp connector, you need
 [width="100%", options="header"]
 |=======
 |Application/Service |Version
-|Mule Runtime |4.2.x and later
+|Mule Runtime |4.3.x and later
 |Anypoint Studio | 7.4.x and later
 |=======
 
