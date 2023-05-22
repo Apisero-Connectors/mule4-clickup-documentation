@@ -18,7 +18,7 @@
 |Name | String | The name for this configuration. Connectors reference the configuration with this name. | | *x*{nbsp}
 | Connection a| <<Config_OauthConnection, Oauth Connection Provider>>
  | The connection types that can be provided to this configuration. | | *x*{nbsp}
-| Response Timeout a| Number |  The timeout for request to the remote service. |  1 | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  60 | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
 ** NANOSECONDS
@@ -27,12 +27,8 @@
 ** SECONDS
 ** MINUTES
 ** HOURS
-** DAYS |  A time unit which qualifies the Response Timeout} |  MINUTES | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  AUTO | {nbsp}
+** DAYS |  A time unit which qualifies the Response Timeout} |  SECONDS | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  AUTO | {nbsp}
 | Name a| String |  The identifier of this element used to reference it in other components |  | *x*{nbsp}
 | Expiration Policy a| <<ExpirationPolicy>> |  Configures the minimum amount of time that a dynamic configuration instance can remain idle before the runtime considers it eligible for expiration. This does not mean that the platform will expire the instance at the exact moment that it becomes eligible. The runtime will actually purge the instances when it sees it fit. |  | {nbsp}
 |===
@@ -42,13 +38,16 @@
 ===== Oauth Connection Provider
 
 
+This is the last layer of the connection provider generation gap pattern. It is what finally gets exposed as the connection provider, including all customizations made in the refinement layer.
+
+
 ====== Parameters
 
 [%header%autowidth.spread]
 |===
 | Name | Type | Description | Default Value | Required
-| Default Headers a| Array of <<DefaultHeader>> |  |  | {nbsp}
-| Query Parameters a| Array of <<DefaultQueryParam>> |  |  | {nbsp}
+| Default headers a| Object |  |  | {nbsp}
+| Default query parameters a| Object |  |  | {nbsp}
 | Connection Timeout a| Number |  The timeout for establishing connections to the remote service |  30 | {nbsp}
 | Connection Timeout Unit a| Enumeration, one of:
 
@@ -71,10 +70,10 @@
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the connection Idle Timeout |  SECONDS | {nbsp}
-| Proxy Config a| <<Proxy>> |  Reusable configuration element for outbound connections through a proxy |  | {nbsp}
 | Stream Response a| Boolean |  Whether or not received responses should be streamed |  false | {nbsp}
 | Response Buffer Size a| Number |  The space in bytes for the buffer where the HTTP response will be stored. |  -1 | {nbsp}
-| Base Uri a| String |  Base URL of Clickup |  https://api.clickup.com/api/v2 | {nbsp}
+| Base Uri a| String |  Enter Base URL of Clickup |  https://api.clickup.com/api/v2 | {nbsp}
+| Proxy Config a| <<Proxy>> |  Reusable configuration element for outbound connections through a proxy. A proxy element must define a host name and a port attributes, and optionally can define a username and a password. |  | {nbsp}
 | Access Token a| String |  Used to send a valid OAuth 2 access token. |  | *x*{nbsp}
 | Protocol a| Enumeration, one of:
 
@@ -93,9 +92,11 @@
 * <<CreateTask>> {nbsp}
 * <<CreateTaskAttachment>> {nbsp}
 * <<CreateTaskComment>> {nbsp}
+* <<CreateUser>> {nbsp}
 * <<DeleteComment>> {nbsp}
 * <<DeleteList>> {nbsp}
 * <<DeleteTask>> {nbsp}
+* <<DeleteUser>> {nbsp}
 * <<GetAccessibleCustomFields>> {nbsp}
 * <<GetBulkTasksStatusTime>> {nbsp}
 * <<GetChatViewComments>> {nbsp}
@@ -108,12 +109,15 @@
 * <<GetTaskComments>> {nbsp}
 * <<GetTasks>> {nbsp}
 * <<GetTasksStatusTime>> {nbsp}
+* <<GetTeam>> {nbsp}
+* <<GetUser>> {nbsp}
 * <<RemoveCustomFieldValue>> {nbsp}
 * <<RemoveTaskFromList>> {nbsp}
 * <<SetCustomFieldValue>> {nbsp}
 * <<UpdateComment>> {nbsp}
 * <<UpdateList>> {nbsp}
 * <<UpdateTask>> {nbsp}
+* <<UpdateUser>> {nbsp}
 
 
 
@@ -140,7 +144,7 @@ Add a task to an additional List This operation makes an HTTP POST request to th
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -151,11 +155,7 @@ Add a task to an additional List This operation makes an HTTP POST request to th
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -206,13 +206,13 @@ Add a new comment to a Chat view This operation makes an HTTP POST request to th
 | Name | Type | Description | Default Value | Required
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
 | View ID a| String |  Enter Unique View ID of the chat window |  | *x*{nbsp}
-| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Body a| Any |  the content to use |  #[payload] | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
-| Custom Query Parameters a| Object |  |  | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -223,11 +223,7 @@ Add a new comment to a Chat view This operation makes an HTTP POST request to th
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -277,14 +273,14 @@ Add a new List in a Space This operation makes an HTTP POST request to the /spac
 |===
 | Name | Type | Description | Default Value | Required
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
-| Space ID a| String |  Enter Unique Space ID of the space |  | *x*{nbsp}
-| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Space ID a| Number |  Enter Unique Space ID of the space |  | *x*{nbsp}
+| Body a| Any |  the content to use |  #[payload] | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
-| Custom Query Parameters a| Object |  |  | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -295,11 +291,7 @@ Add a new List in a Space This operation makes an HTTP POST request to the /spac
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -349,14 +341,14 @@ Add a new List to a Folder This operation makes an HTTP POST request to the /fol
 |===
 | Name | Type | Description | Default Value | Required
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
-| Folder ID a| String |  Enter Unique Folder ID of the folder |  | *x*{nbsp}
-| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Folder ID a| Number |  Enter Unique Folder ID of the folder |  | *x*{nbsp}
+| Body a| Any |  the content to use |  #[payload] | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
-| Custom Query Parameters a| Object |  |  | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -367,11 +359,7 @@ Add a new List to a Folder This operation makes an HTTP POST request to the /fol
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -422,13 +410,13 @@ Add a comment to a List This operation makes an HTTP POST request to the /list/{
 | Name | Type | Description | Default Value | Required
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
 | List ID a| String |  Enter Unique List ID of the list |  | *x*{nbsp}
-| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Body a| Any |  the content to use |  #[payload] | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
-| Custom Query Parameters a| Object |  |  | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -439,11 +427,7 @@ Add a comment to a List This operation makes an HTTP POST request to the /list/{
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -495,14 +479,14 @@ Create a new task This operation makes an HTTP POST request to the /list/{list_i
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
 | List ID a| String |  Enter Unique List ID of the list |  | *x*{nbsp}
 | Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
-| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
-| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Team id a| Number |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Body a| Any |  the content to use |  #[payload] | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
-| Custom Query Parameters a| Object |  |  | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -513,11 +497,7 @@ Create a new task This operation makes an HTTP POST request to the /list/{list_i
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -569,14 +549,14 @@ Upload a file to a task as an attachment This operation makes an HTTP POST reque
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
 | Task ID a| String |  Enter Unique Task ID of the task |  | *x*{nbsp}
 | Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
-| Team ID a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
-| Attachment Content a| String |  The content of the 'attachment' part. |  #[payload] | {nbsp}
+| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Attachment a| String |  The content of the 'attachment' part. |  #[payload] | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
-| Custom Query Parameters a| Object |  |  | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -587,11 +567,7 @@ Upload a file to a task as an attachment This operation makes an HTTP POST reque
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -643,14 +619,14 @@ Add a new comment to a task This operation makes an HTTP POST request to the /ta
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
 | Task ID a| String |  Enter Unique Task ID of the task |  | *x*{nbsp}
 | Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
-| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
-| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Team id a| Number |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Body a| Any |  the content to use |  #[payload] | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
-| Custom Query Parameters a| Object |  |  | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -661,11 +637,75 @@ Add a new comment to a task This operation makes an HTTP POST request to the /ta
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
 
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[CreateUser]]
+== Invite User To Workspace
+`<clickup:create-user>`
+
+
+Invite someone to join your Workspace as a member. To invite someone as a guest, use the Invite Guest endpoint(Enterprise plan) This operation makes an HTTP POST request to the /team/{team_id}/user endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Team ID (Workspace) a| String |  Enter the Unique Team ID |  | *x*{nbsp}
+| Body a| Any |  the content to use |  #[payload] | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -715,13 +755,13 @@ Delete a task comment This operation makes an HTTP DELETE request to the /commen
 |===
 | Name | Type | Description | Default Value | Required
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
-| Comment ID a| String |  Enter Unique Comment ID of the comment |  | *x*{nbsp}
+| Comment ID a| Number |  Enter Unique Comment ID of the comment |  | *x*{nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -732,11 +772,7 @@ Delete a task comment This operation makes an HTTP DELETE request to the /commen
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -792,7 +828,7 @@ Delete a List from your Workspace This operation makes an HTTP DELETE request to
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -803,11 +839,7 @@ Delete a List from your Workspace This operation makes an HTTP DELETE request to
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -859,13 +891,13 @@ Delete a task from your Workspace This operation makes an HTTP DELETE request to
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
 | Task ID a| String |  Enter the Unique task ID of the task you want to update |  | *x*{nbsp}
 | Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
-| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Team id a| Number |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -876,11 +908,75 @@ Delete a task from your Workspace This operation makes an HTTP DELETE request to
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
 
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[DeleteUser]]
+== Remove User From Workspace
+`<clickup:delete-user>`
+
+
+Deactivate a user from a Workspace(Enterprise plan) This operation makes an HTTP DELETE request to the /team/{team_id}/user/{user_id} endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Team ID (Workspace) a| String |  Enter the Unique Team ID |  | *x*{nbsp}
+| User ID a| String |  Enter the User ID |  | *x*{nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -936,7 +1032,7 @@ View the Custom Fields available on tasks in a specific List This operation make
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -947,11 +1043,7 @@ View the Custom Fields available on tasks in a specific List This operation make
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -1002,14 +1094,14 @@ View how long two or more tasks have been in each status This operation makes an
 | Name | Type | Description | Default Value | Required
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
 | Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
-| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Team id a| Number |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
 | Task ids a| String |  Include this paramater once per task_id. You can include up to 100 task ids per request |  | *x*{nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -1020,11 +1112,7 @@ View how long two or more tasks have been in each status This operation makes an
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -1075,14 +1163,14 @@ View comments from a Chat view This operation makes an HTTP GET request to the /
 | Name | Type | Description | Default Value | Required
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
 | View ID a| String |  Enter Unique View ID of the chat window |  | *x*{nbsp}
-| start a| String |  Enter the date of a task comment using Unix time in milliseconds |  | {nbsp}
+| start a| Number |  Enter the date of a task comment using Unix time in milliseconds |  | {nbsp}
 | Start id a| String |  Enter the Comment id of a task comment |  | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -1093,11 +1181,7 @@ View comments from a Chat view This operation makes an HTTP GET request to the /
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -1147,7 +1231,7 @@ View the tasks that meet specific criteria from a Workspace This operation makes
 |===
 | Name | Type | Description | Default Value | Required
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
-| Team ID (Workspace) a| String |  Enter the Unique Team/Workspace ID for workspace |  | *x*{nbsp}
+| Team ID (Workspace) a| String |  Only used when the custom_task_ids parameter is set to true |  | *x*{nbsp}
 | page a| Number |  Page to fetch (starts at 0) |  | {nbsp}
 | Order by a| String |  Order by a particular field. By default, tasks are ordered by created |  | {nbsp}
 | reverse a| Boolean |  Tasks are displayed in reverse order. |  false | {nbsp}
@@ -1173,7 +1257,7 @@ View the tasks that meet specific criteria from a Workspace This operation makes
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -1184,11 +1268,7 @@ View the tasks that meet specific criteria from a Workspace This operation makes
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -1238,14 +1318,14 @@ View the Lists in a Space that aren't located in a Folder This operation makes a
 |===
 | Name | Type | Description | Default Value | Required
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
-| Space ID a| String |  Enter Unique Space ID of the space |  | *x*{nbsp}
+| Space ID a| Number |  Enter Unique Space ID of the space |  | *x*{nbsp}
 | archived a| Boolean |  Set to true if required to get archived list details |  false | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -1256,11 +1336,7 @@ View the Lists in a Space that aren't located in a Folder This operation makes a
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -1316,7 +1392,7 @@ View information about a List This operation makes an HTTP GET request to the /l
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -1327,11 +1403,7 @@ View information about a List This operation makes an HTTP GET request to the /l
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -1382,14 +1454,14 @@ View the comments added to a List This operation makes an HTTP GET request to th
 | Name | Type | Description | Default Value | Required
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
 | List ID a| String |  Enter Unique List ID of the list |  | *x*{nbsp}
-| start a| String |  Enter the date of a task comment using Unix time in milliseconds |  | {nbsp}
+| start a| Number |  Enter the date of a task comment using Unix time in milliseconds |  | {nbsp}
 | Start id a| String |  Enter the Comment id of a task comment |  | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -1400,11 +1472,7 @@ View the comments added to a List This operation makes an HTTP GET request to th
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -1454,14 +1522,14 @@ View the Lists within a Folder This operation makes an HTTP GET request to the /
 |===
 | Name | Type | Description | Default Value | Required
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
-| Folder ID a| String |  Enter Unique Folder ID of the folder |  | *x*{nbsp}
+| Folder ID a| Number |  Enter Unique Folder ID of the folder |  | *x*{nbsp}
 | archived a| Boolean |  Set to true if required to get archived list details |  false | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -1472,11 +1540,7 @@ View the Lists within a Folder This operation makes an HTTP GET request to the /
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -1528,14 +1592,14 @@ View information about a task This operation makes an HTTP GET request to the /t
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
 | Task ID a| String |  Enter the Unique task ID of the task you want to update |  | *x*{nbsp}
 | Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
-| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Team id a| Number |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
 | Include subtasks a| Boolean |  Include subtasks, default false |  false | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -1546,11 +1610,7 @@ View information about a task This operation makes an HTTP GET request to the /t
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -1602,15 +1662,15 @@ View task comments This operation makes an HTTP GET request to the /task/{task_i
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
 | Task ID a| String |  Enter Unique Task ID of the task |  | *x*{nbsp}
 | Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
-| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
-| start a| String |  Enter the date of a task comment using Unix time in milliseconds |  | {nbsp}
+| Team id a| Number |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| start a| Number |  Enter the date of a task comment using Unix time in milliseconds |  | {nbsp}
 | Start id a| String |  Enter the Comment id of a task comment |  | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -1621,11 +1681,7 @@ View task comments This operation makes an HTTP GET request to the /task/{task_i
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -1697,7 +1753,7 @@ View the tasks in a List This operation makes an HTTP GET request to the /list/{
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -1708,11 +1764,7 @@ View the tasks in a List This operation makes an HTTP GET request to the /list/{
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -1764,13 +1816,13 @@ View how long a task has been in each status This operation makes an HTTP GET re
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
 | Task ID a| String |  Enter the Unique task ID of the task you want to update |  | *x*{nbsp}
 | Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
-| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Team id a| Number |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -1781,11 +1833,141 @@ View how long a task has been in each status This operation makes an HTTP GET re
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
 
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[GetTeam]]
+== Get Authorized Teams (Workspaces)
+`<clickup:get-team>`
+
+
+View the Workspaces available to the authenticated user This operation makes an HTTP GET request to the /team endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
+
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[GetUser]]
+== Get User
+`<clickup:get-user>`
+
+
+View information about a user in a Workspace(Enterprise plan) This operation makes an HTTP GET request to the /team/{team_id}/user/{user_id} endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Team ID (Workspace) a| String |  Enter the Unique Team ID |  | *x*{nbsp}
+| User ID a| String |  Enter the User ID |  | *x*{nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -1838,13 +2020,13 @@ Remove the data from a Custom Field on a task. This does not delete the option f
 | Task ID a| String |  Enter the Unique task ID of the task you want to update |  | *x*{nbsp}
 | Field ID a| String |  Enter the universal unique identifier (UUID) of the Custom Field you want to set |  | *x*{nbsp}
 | Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
-| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Team id a| Number |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -1855,11 +2037,7 @@ Remove the data from a Custom Field on a task. This does not delete the option f
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -1916,7 +2094,7 @@ Remove a task from an additional List. You can't remove a task from its home Lis
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
 | Custom Query Parameters a| Object |  |  #[null] | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -1927,11 +2105,7 @@ Remove a task from an additional List. You can't remove a task from its home Lis
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -1984,14 +2158,14 @@ Add data to a Custom field on a task This operation makes an HTTP POST request t
 | Task ID a| String |  Enter the Unique task ID of the task you want to update |  | *x*{nbsp}
 | Field ID a| String |  Enter the universal unique identifier (UUID) of the Custom Field you want to set |  | *x*{nbsp}
 | Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
-| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
-| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Team id a| Number |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Body a| Any |  the content to use |  #[payload] | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
-| Custom Query Parameters a| Object |  |  | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -2002,11 +2176,7 @@ Add data to a Custom field on a task This operation makes an HTTP POST request t
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -2056,14 +2226,14 @@ Replace the content of a task commment, assign a comment, and mark a comment as 
 |===
 | Name | Type | Description | Default Value | Required
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
-| Comment ID a| String |  Enter Unique Comment ID of the comment |  | *x*{nbsp}
-| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Comment ID a| Number |  Enter Unique Comment ID of the comment |  | *x*{nbsp}
+| Body a| Any |  the content to use |  #[payload] | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
-| Custom Query Parameters a| Object |  |  | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -2074,11 +2244,7 @@ Replace the content of a task commment, assign a comment, and mark a comment as 
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -2129,13 +2295,13 @@ Rename a List, update the List Info description, set a due date/time, set the Li
 | Name | Type | Description | Default Value | Required
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
 | List ID a| String |  Enter Unique List ID of the list |  | *x*{nbsp}
-| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Body a| Any |  the content to use |  #[payload] | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
-| Custom Query Parameters a| Object |  |  | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -2146,11 +2312,7 @@ Rename a List, update the List Info description, set a due date/time, set the Li
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
-
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -2202,14 +2364,14 @@ Update a task This operation makes an HTTP PUT request to the /task/{task_id} en
 | Configuration | String | The name of the configuration to use. | | *x*{nbsp}
 | Task ID a| String |  Enter the Unique task ID of the task you want to update |  | *x*{nbsp}
 | Custom task ids a| Boolean |  If you want to reference a task by it's custom task id, this value must be true |  false | {nbsp}
-| Team id a| String |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
-| Content a| Binary |  the content to use |  #[payload] | {nbsp}
+| Team id a| Number |  Only used when the custom_task_ids parameter is set to true |  | {nbsp}
+| Body a| Any |  the content to use |  #[payload] | {nbsp}
 | Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
 | Streaming Strategy a| * <<RepeatableInMemoryStream>>
 * <<RepeatableFileStoreStream>>
 * non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
-| Custom Query Parameters a| Object |  |  | {nbsp}
-| Custom Headers a| Object |  |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
 | Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
 | Response Timeout Unit a| Enumeration, one of:
 
@@ -2220,11 +2382,76 @@ Update a task This operation makes an HTTP PUT request to the /task/{task_id} en
 ** MINUTES
 ** HOURS
 ** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
-| Streaming Type a| Enumeration, one of:
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+| Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
+| Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
+| Reconnection Strategy a| * <<Reconnect>>
+* <<ReconnectForever>> |  A retry strategy in case of connectivity errors |  | {nbsp}
+|===
 
-** AUTO
-** ALWAYS
-** NEVER |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
+=== Output
+
+[%autowidth.spread]
+|===
+| *Type* a| Any
+| *Attributes Type* a| <<HttpResponseAttributes>>
+|===
+
+=== For Configurations
+
+* <<Config>> {nbsp}
+
+=== Throws
+
+* CLICKUP:BAD_REQUEST {nbsp}
+* CLICKUP:CLIENT_ERROR {nbsp}
+* CLICKUP:CONNECTIVITY {nbsp}
+* CLICKUP:INTERNAL_SERVER_ERROR {nbsp}
+* CLICKUP:NOT_ACCEPTABLE {nbsp}
+* CLICKUP:NOT_FOUND {nbsp}
+* CLICKUP:RETRY_EXHAUSTED {nbsp}
+* CLICKUP:SERVER_ERROR {nbsp}
+* CLICKUP:SERVICE_UNAVAILABLE {nbsp}
+* CLICKUP:TIMEOUT {nbsp}
+* CLICKUP:TOO_MANY_REQUESTS {nbsp}
+* CLICKUP:UNAUTHORIZED {nbsp}
+* CLICKUP:UNSUPPORTED_MEDIA_TYPE {nbsp}
+
+
+[[UpdateUser]]
+== Edit User On Workspace
+`<clickup:update-user>`
+
+
+Update a user's name and role(Enterprise plan) This operation makes an HTTP PUT request to the /team/{team_id}/user/{user_id} endpoint
+
+
+=== Parameters
+
+[%header%autowidth.spread]
+|===
+| Name | Type | Description | Default Value | Required
+| Configuration | String | The name of the configuration to use. | | *x*{nbsp}
+| Team ID (Workspace) a| String |  Enter the Unique Team ID |  | *x*{nbsp}
+| User ID a| String |  Enter the User ID |  | *x*{nbsp}
+| Body a| Any |  the content to use |  #[payload] | {nbsp}
+| Config Ref a| ConfigurationProvider |  The name of the configuration to be used to execute this component |  | *x*{nbsp}
+| Streaming Strategy a| * <<RepeatableInMemoryStream>>
+* <<RepeatableFileStoreStream>>
+* non-repeatable-stream |  Configure if repeatable streams should be used and their behaviour |  | {nbsp}
+| Custom Query Parameters a| Object |  |  #[null] | {nbsp}
+| Custom Headers a| Object |  |  #[null] | {nbsp}
+| Response Timeout a| Number |  The timeout for request to the remote service. |  | {nbsp}
+| Response Timeout Unit a| Enumeration, one of:
+
+** NANOSECONDS
+** MICROSECONDS
+** MILLISECONDS
+** SECONDS
+** MINUTES
+** HOURS
+** DAYS |  A time unit which qualifies the Response Timeout} |  | {nbsp}
+| Streaming Type a| String |  Defines if the request should be sent using streaming. Setting the value to AUTO will automatically define the best strategy based on the request content. |  | {nbsp}
 | Target Variable a| String |  The name of a variable on which the operation's output will be placed |  | {nbsp}
 | Target Value a| String |  An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable |  #[payload] | {nbsp}
 | Reconnection Strategy a| * <<Reconnect>>
@@ -2262,37 +2489,17 @@ Update a task This operation makes an HTTP PUT request to the /task/{task_id} en
 
 
 == Types
-[[DefaultHeader]]
-=== Default Header
-
-[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
-|======================
-| Field | Type | Description | Default Value | Required
-| Key a| String |  |  | x
-| Value a| String |  |  | x
-|======================
-
-[[DefaultQueryParam]]
-=== Default Query Param
-
-[cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
-|======================
-| Field | Type | Description | Default Value | Required
-| Key a| String |  |  | x
-| Value a| String |  |  | x
-|======================
-
 [[Proxy]]
 === Proxy
 
 [cols=".^20%,.^25%,.^30%,.^15%,.^10%", options="header"]
 |======================
 | Field | Type | Description | Default Value | Required
-| Host a| String |  |  | x
-| Port a| Number |  |  | x
-| Username a| String |  |  | 
-| Password a| String |  |  | 
-| Non Proxy Hosts a| String |  |  | 
+| Host a| String | Host where the proxy requests will be sent. |  | x
+| Port a| Number | Port where the proxy requests will be sent. |  | x
+| Username a| String | The username to authenticate against the proxy. |  | x
+| Password a| String | The password to authenticate against the proxy. |  | x
+| Non Proxy Hosts a| String | A list of comma separated hosts against which the proxy should not be used |  | x
 |======================
 
 [[Tls]]
@@ -2460,4 +2667,3 @@ Update a task This operation makes an HTTP PUT request to the /task/{task_id} en
 ** MB
 ** GB | The unit in which maxInMemorySize is expressed |  | 
 |======================
-
