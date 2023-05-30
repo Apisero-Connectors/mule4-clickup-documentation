@@ -4,7 +4,7 @@ MuleSoft Certified
 
 == About ClickUp
 
-ClickUp is an all-in-one productivity and project management tool built for teams of all types across any industry to scale up business.In this platform we can plan, track, and collaborate on any project, build the perfect workflow for individual and team, create marketing campaigns, manage development sprints, and more. Hierarchy is followed as workspaces, folders, lists, task and subtasks
+ClickUp is an all-in-one productivity and project management tool built for teams of all types across any industry to scale up business. In this platform we can plan, track, and collaborate on any project, build the perfect workflow for individual and team, create marketing campaigns, manage development sprints, and more. Hierarchy is followed as workspaces, folders, lists, task and subtasks
 
 == About ClickUp Connector
 
